@@ -6,7 +6,7 @@ from src.utils.tree_formatter import format_tree
 class LocalViewer(BaseViewer):
     def view(self, path):
         tree = self._build_tree(path)
-        return format_tree(tree)
+        return format_tree(tree, path)
 
     def _build_tree(self, path):
         tree = {}
