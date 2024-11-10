@@ -1,6 +1,6 @@
 import os
-from tree_viewers.base_viewer import BaseViewer
-from utils.tree_formatter import format_tree
+from src.tree_viewers.base_viewer import BaseViewer
+from src.utils.tree_formatter import format_tree
 
 
 class LocalViewer(BaseViewer):
