@@ -8,6 +8,10 @@ class GitHubViewer(BaseViewer):
         owner, repo = self._parse_repo_url(repo_url)
         tree = self._build_tree(owner, repo, config)
         return format_tree(tree, f"{owner}/{repo}", config)
+    
+    def is_github_url(url):
+        return url.startswith("https://github.com/") and url.count('/') >= 4
+
 
     def _parse_repo_url(self, repo_url):
         parts = repo_url.split('/')
@@ -23,8 +27,7 @@ class GitHubViewer(BaseViewer):
         tree = {}
         for item in contents:
             if item['type'] == 'dir':
-                if not config.is_excluded(item['name']):
-                    tree[item['name']] = self._build_tree(owner, repo, config, item['path'])
+                tree[item['name']] = self._build_tree(owner, repo, config, item['path'])
             else:
                 tree[item['name']] = None
         return tree

@@ -12,7 +12,7 @@ class LocalViewer(BaseViewer):
         tree = {}
         for item in os.listdir(path):
             item_path = os.path.join(path, item)
-            if os.path.isdir(item_path) and not config.is_excluded(item):
+            if os.path.isdir(item_path):
                 tree[item] = self._build_tree(item_path, config)
             elif os.path.isfile(item_path):
                 tree[item] = None

@@ -9,6 +9,11 @@ class ArchiveViewer(BaseViewer):
     def view(self, path, config):
         tree = self._build_tree(path, config)
         return format_tree(tree, path, config)
+    
+    def is_archive(path):
+        return (zipfile.is_zipfile(path) or 
+                tarfile.is_tarfile(path) or 
+                rarfile.is_rarfile(path))
 
     def _build_tree(self, path, config):
         if zipfile.is_zipfile(path):
@@ -44,8 +49,6 @@ class ArchiveViewer(BaseViewer):
     def _add_to_tree(self, tree, parts, config):
         current = tree
         for part in parts[:-1]:
-            if config.is_excluded(part):
-                return
             current = current.setdefault(part, {})
-        if parts[-1] and not config.is_excluded(parts[-1]):  # Ignore empty names (directory entries)
+        if parts[-1]:
             current[parts[-1]] = None
