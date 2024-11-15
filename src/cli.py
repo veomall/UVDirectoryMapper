@@ -6,6 +6,7 @@ from src.tree_viewers.local_viewer import LocalViewer
 from src.tree_viewers.archive_viewer import ArchiveViewer
 from src.tree_viewers.github_viewer import GitHubViewer
 from src.config import Config
+from src.utils.image_creator import create_tree_image
 
 
 def get_viewer_type():
@@ -76,8 +77,14 @@ def run_interactive_cli():
         return
 
     try:
-        tree = viewer.view(path, config)
-        print(tree)
+        tree_str = viewer.view(path, config)
+        print(tree_str)
+
+        print("\nWould you like to create an image of the directory tree?")
+        if input("Enter 'y' for yes, any other key for no: ").lower() == 'y':
+            output_file = input("Enter the output file name (without extension): ").strip() or 'tree_structure'
+            create_tree_image(tree_str, output_file)
+
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
