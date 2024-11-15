@@ -110,13 +110,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
 # mkdocs documentation
 /site
 
@@ -127,9 +120,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# PyCharm
-.idea/
 
 # VS Code
 .vscode/
@@ -142,3 +132,6 @@ dmypy.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Generated images
+*.png
