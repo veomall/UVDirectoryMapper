@@ -2,7 +2,7 @@ import sys
 import os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                              QComboBox, QLineEdit, QPushButton, QTextEdit, QLabel, QFileDialog, QMessageBox,
-                             QStackedWidget, QSplitter)
+                             QStackedWidget, QSplitter, QCheckBox)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette, QColor
 from src.tree_viewers.local_viewer import LocalViewer
@@ -76,6 +76,13 @@ class MainWindow(QMainWindow):
         exclusions_layout.addWidget(self.exclusions_input)
         top_layout.addLayout(exclusions_layout)
 
+        # Add show contents checkbox after exclusions
+        contents_layout = QHBoxLayout()
+        self.show_contents_checkbox = QCheckBox("Show file contents")
+        self.show_contents_checkbox.stateChanged.connect(self.on_show_contents_changed)
+        contents_layout.addWidget(self.show_contents_checkbox)
+        top_layout.addLayout(contents_layout)
+
         # Open button
         self.open_button = QPushButton("Open")
         self.open_button.clicked.connect(self.open_tree)
@@ -88,16 +95,22 @@ class MainWindow(QMainWindow):
         bottom_widget = QWidget()
         bottom_layout = QVBoxLayout(bottom_widget)
 
+        tree_contents_splitter = QSplitter(Qt.Horizontal)
+
         # Tree view
         self.tree_view = QTextEdit()
         self.tree_view.setReadOnly(True)
-        bottom_layout.addWidget(self.tree_view)
+        tree_contents_splitter.addWidget(self.tree_view)
 
-        # Save image button
-        self.save_image_button = QPushButton("Save Tree Image")
-        self.save_image_button.clicked.connect(self.save_tree_image)
-        bottom_layout.addWidget(self.save_image_button)
+        # File contents view
+        self.contents_view = QTextEdit()
+        self.contents_view.setReadOnly(True)
+        tree_contents_splitter.addWidget(self.contents_view)
 
+        # Set equal sizes for splitter
+        tree_contents_splitter.setSizes([400, 400])
+
+        bottom_layout.addWidget(tree_contents_splitter)
         # Add bottom widget to splitter
         splitter.addWidget(bottom_widget)
 
@@ -147,10 +160,22 @@ class MainWindow(QMainWindow):
             return
 
         try:
-            tree_str = viewer.view(path, self.config)
+            tree_str, contents = viewer.view(path, self.config)
             self.tree_view.setText(tree_str)
+            
+            # Format and display file contents
+            if contents:
+                contents_text = ""
+                for file_path, content in contents.items():
+                    contents_text += f"# {file_path}\n{content}\n\n"
+                self.contents_view.setText(contents_text)
+            else:
+                self.contents_view.clear()
         except Exception as e:
             QMessageBox.warning(self, "Error", f"An error occurred: {str(e)}")
+
+    def on_show_contents_changed(self, state):
+        self.config.set_show_file_contents(state == Qt.Checked)
 
     def save_tree_image(self):
         tree_str = self.tree_view.toPlainText()

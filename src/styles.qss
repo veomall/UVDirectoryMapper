@@ -62,6 +62,7 @@ QComboBox QAbstractItemView {
     border: 1px solid #6272a4;
     selection-background-color: #44475a;
 }
+
 QScrollBar:vertical {
     border: none;
     background: #44475a;
@@ -81,4 +82,28 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
     background: none;
+}
+
+QCheckBox {
+    color: #f8f8f2;
+    font-size: 14px;
+    spacing: 5px;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #6272a4;
+    border-radius: 3px;
+    background-color: #44475a;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #50fa7b;
+    border-color: #50fa7b;
+    image: url(check.png);
+}
+
+QCheckBox::indicator:hover {
+    border-color: #50fa7b;
 }
